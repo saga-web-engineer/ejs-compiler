@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.editorconfig",
+    "j69.ejs-beautify",
+    "leonzalion.vscode-ejs",
+    "saikou9901.evilinspector",
+    "tombonnike.vscode-status-bar-format-toggle",
+    "wix.vscode-import-cost",
+    "oderwat.indent-rainbow",
+    "esbenp.prettier-vscode",
+    "yoavbls.pretty-ts-errors",
+    "stylelint.vscode-stylelint",
+    "mattpocock.ts-error-translator"
+  ]
+}
