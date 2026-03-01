@@ -3,9 +3,9 @@ import { defineBuildConfig } from 'unbuild'
 export default defineBuildConfig({
   entries: [
     // Library entry
-    './src/index',
+    { input: './src/lib/index', name: 'index' },
     // CLI entry
-    './src/cli',
+    { input: './src/cli/index', name: 'cli' },
   ],
   declaration: true,
   clean: true,

@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { join, relative, dirname } from "pathe";
 import ejs from "ejs";
 import fg from "fast-glob";
-import type { CompilerOptions, CompileResult } from "./types";
+import type { CompilerOptions, CompileResult } from "./types.js";
 
 /**
  * EJSテンプレートファイルをコンパイルする
