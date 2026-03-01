@@ -27,7 +27,8 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "unbuild",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test:cli": "node dist/cli.mjs -b test/templates/pages/ -f \"**/[!_]*.ejs\" -o test/dist/ -O test/data.json -e \"about.ejs\""
   },
   "volta": {
     "node": "24.13.0",

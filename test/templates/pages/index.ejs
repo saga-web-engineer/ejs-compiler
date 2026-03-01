@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
 <%- include('../components/_head.ejs', { title: title }) %>
+
 <body>
   <h1><%= heading %></h1>
   <p><%= description %></p>
 
   <hr>
-  <h2>読み込まれたJSONデータ:</h2>
+  <%- include('./_components/_heading.ejs') %>
   <ul>
     <li>title: <%= title %></li>
     <li>heading: <%= heading %></li>
     <li>description: <%= description %></li>
   </ul>
 </body>
+
 </html>
