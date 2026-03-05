@@ -3,7 +3,9 @@ import { consola } from 'consola';
 import { compile, loadOptionsData } from '../lib/index';
 import type { args as argsDefinition } from './config';
 
-export async function compileHandler(context: CommandContext<typeof argsDefinition>): Promise<void> {
+export async function compileHandler(
+  context: CommandContext<typeof argsDefinition>,
+): Promise<void> {
   const { args } = context;
   try {
     const data = args.options ? await loadOptionsData(args.options) : {};

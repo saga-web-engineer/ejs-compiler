@@ -1,19 +1,19 @@
 export interface CompilerOptions {
   /** 相対パス解決の基準ディレクトリ */
-  baseDir?: string
+  baseDir?: string;
   /** 出力先ディレクトリ */
-  outDir?: string
+  outDir?: string;
   /** テンプレートに渡すデータ/変数 */
-  data?: Record<string, unknown>
+  data?: Record<string, unknown>;
   /** 除外するファイルパターン */
-  exclude?: string[]
+  exclude?: string[];
 }
 
 export interface CompileResult {
   /** ソースファイルパス */
-  source: string
+  source: string;
   /** 出力ファイルパス（outDir指定時） */
-  output?: string
+  output?: string;
   /** コンパイル済みコンテンツ */
-  content: string
+  content: string;
 }
