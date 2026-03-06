@@ -5,10 +5,10 @@ import { dirname, join } from 'pathe';
 import type { CompileResult, CompilerOptions } from './types';
 
 /**
- * EJSテンプレートファイルをコンパイルする
- * @param filePattern ファイルパターン（globパターン対応）
- * @param options コンパイルオプション
- * @returns コンパイル結果の配列
+ * Compile EJS template files
+ * @param filePattern File pattern (supports glob patterns)
+ * @param options Compiler options
+ * @returns Array of compilation results
  */
 export async function compile(
   filePattern: string | string[],
@@ -23,7 +23,7 @@ export async function compile(
     onlyFiles: true,
   });
 
-  if (files.length === 0) throw new Error(`マッチするファイルが見つかりません: ${filePattern}`);
+  if (files.length === 0) throw new Error(`No matching files found: ${filePattern}`);
 
   return Promise.all(
     files.map(async (file) => {
@@ -50,9 +50,9 @@ export async function compile(
 }
 
 /**
- * JSONファイルまたはJSON文字列からデータを読み込む
- * @param input ファイルパスまたはJSON文字列
- * @returns パースされたデータ
+ * Load data from JSON file or JSON string
+ * @param input File path or JSON string
+ * @returns Parsed data
  */
 export async function loadOptionsData(input: string): Promise<Record<string, unknown>> {
   try {

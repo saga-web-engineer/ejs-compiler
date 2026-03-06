@@ -7,29 +7,29 @@ export const meta = {
 export const args = {
   file: {
     type: 'string',
-    description: 'テンプレートファイルパス（globパターン対応）',
+    description: 'Template file path (supports glob patterns)',
     alias: 'f',
     required: true,
   },
   'base-dir': {
     type: 'string',
-    description: '相対パスの基準ディレクトリ',
+    description: 'Base directory for relative paths',
     alias: 'b',
     default: './',
   },
   out: {
     type: 'string',
-    description: '出力先ディレクトリ',
+    description: 'Output directory',
     alias: 'o',
   },
   options: {
     type: 'string',
-    description: 'オプション変数（JSONファイルまたはJSON文字列）',
+    description: 'Options data (JSON file path or JSON string)',
     alias: 'O',
   },
   exclude: {
     type: 'string',
-    description: '除外するファイルパターン（カンマ区切り）',
+    description: 'File patterns to exclude (comma-separated)',
     alias: 'e',
   },
 } as const;

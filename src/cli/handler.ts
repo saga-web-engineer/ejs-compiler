@@ -23,7 +23,7 @@ export async function compileHandler(
       return;
     }
 
-    consola.success(`${results.length}個のファイルをコンパイルしました`);
+    consola.success(`Compiled ${results.length} file(s)`);
     for (const result of results) consola.log(`${result.source} → ${result.output}`);
   } catch (error) {
     consola.error(error);
