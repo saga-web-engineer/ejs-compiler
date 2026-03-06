@@ -1,2 +1,2 @@
-export { compile, loadOptionsData } from './compiler.js';
-export type { CompileResult, CompilerOptions } from './types.js';
+export { compile, loadOptionsData } from './compiler';
+export type { CompileResult, CompilerOptions } from './types';

@@ -1,8 +1,8 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { join, relative, dirname } from "pathe";
-import ejs from "ejs";
-import fg from "fast-glob";
-import type { CompilerOptions, CompileResult } from "./types.js";
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import ejs from 'ejs';
+import fg from 'fast-glob';
+import { dirname, join } from 'pathe';
+import type { CompileResult, CompilerOptions } from './types';
 
 /**
  * EJSテンプレートファイルをコンパイルする
@@ -11,69 +11,42 @@ import type { CompilerOptions, CompileResult } from "./types.js";
  * @returns コンパイル結果の配列
  */
 export async function compile(
-	filePattern: string | string[],
-	options: CompilerOptions = {},
+  filePattern: string | string[],
+  options: CompilerOptions = {},
 ): Promise<CompileResult[]> {
-	const {
-		baseDir = process.cwd(),
-		outDir,
-		data = {},
-		exclude = [],
-	} = options;
+  const { baseDir = process.cwd(), outDir, data = {}, exclude = [] } = options;
 
-	// ファイル検索
-	const files = await fg(filePattern, {
-		cwd: baseDir,
-		ignore: exclude,
-		absolute: false,
-		onlyFiles: true,
-	});
+  const files = await fg(filePattern, {
+    cwd: baseDir,
+    ignore: exclude,
+    absolute: false,
+    onlyFiles: true,
+  });
 
-	if (files.length === 0) {
-		throw new Error(`マッチするファイルが見つかりません: ${filePattern}`);
-	}
+  if (files.length === 0) throw new Error(`マッチするファイルが見つかりません: ${filePattern}`);
 
-	// 各ファイルをコンパイル
-	const results: CompileResult[] = [];
+  return Promise.all(
+    files.map(async (file) => {
+      const sourcePath = join(baseDir, file);
+      const content = await ejs.renderFile(sourcePath, data);
 
-	for (const file of files) {
-		const sourcePath = join(baseDir, file);
+      if (!outDir) {
+        return {
+          source: sourcePath,
+          output: undefined,
+          content,
+        };
+      }
 
-		// EJSテンプレートをレンダリング
-		const content = await ejs.renderFile(sourcePath, data);
+      const output = await writeOutputFile(outDir, file, content);
 
-		// 出力先パスを決定
-		let outputPath: string | undefined;
-		if (outDir) {
-			// .ejsの拡張子を削除（存在する場合）
-			let outputFile = file.endsWith(".ejs")
-				? file.slice(0, -4)
-				: file;
-
-			// 拡張子がない場合は.htmlを追加
-			const hasExtension = /\.[^/\\]+$/.test(outputFile);
-			if (!hasExtension) {
-				outputFile += ".html";
-			}
-
-			outputPath = join(outDir, outputFile);
-
-			// 出力先ディレクトリを作成
-			const outputDirPath = dirname(outputPath);
-			await mkdir(outputDirPath, { recursive: true });
-
-			// ファイルを書き込み
-			await writeFile(outputPath, content, "utf-8");
-		}
-
-		results.push({
-			source: sourcePath,
-			output: outputPath,
-			content,
-		});
-	}
-
-	return results;
+      return {
+        source: sourcePath,
+        output,
+        content,
+      };
+    }),
+  );
 }
 
 /**
@@ -81,15 +54,28 @@ export async function compile(
  * @param input ファイルパスまたはJSON文字列
  * @returns パースされたデータ
  */
-export async function loadOptionsData(
-	input: string,
-): Promise<Record<string, unknown>> {
-	// JSON文字列として解釈を試みる
-	try {
-		return JSON.parse(input);
-	} catch {
-		// JSON文字列でない場合はファイルパスとして扱う
-		const fileContent = await readFile(input, "utf-8");
-		return JSON.parse(fileContent);
-	}
+export async function loadOptionsData(input: string): Promise<Record<string, unknown>> {
+  try {
+    return JSON.parse(input);
+  } catch {
+    const fileContent = await readFile(input, 'utf-8');
+    return JSON.parse(fileContent);
+  }
+}
+
+function getOutputFileName(file: string): string {
+  const withoutEjs = file.endsWith('.ejs') ? file.slice(0, -4) : file;
+  const hasExtension = /\.[^/\\]+$/.test(withoutEjs);
+
+  return hasExtension ? withoutEjs : `${withoutEjs}.html`;
+}
+
+async function writeOutputFile(outDir: string, file: string, content: string): Promise<string> {
+  const outputFile = getOutputFileName(file);
+  const outputPath = join(outDir, outputFile);
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, content, 'utf-8');
+
+  return outputPath;
 }
