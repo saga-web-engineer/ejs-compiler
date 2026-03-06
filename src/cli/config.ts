@@ -1,5 +1,5 @@
 export const meta = {
-  name: 'ejs-cli',
+  name: 'ejs-compiler',
   version: '1.0.0',
   description: 'Modern EJS template compiler with TypeScript support',
 };

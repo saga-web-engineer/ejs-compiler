@@ -1,10 +1,10 @@
 {
-  "name": "ejs-cli",
+  "name": "ejs-compiler",
   "version": "1.0.0",
   "description": "Modern EJS template compiler with TypeScript support",
   "type": "module",
   "bin": {
-    "ejs-cli": "./dist/cli.mjs"
+    "ejs-compiler": "./dist/cli.mjs"
   },
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,8 @@
     "ejs",
     "cli",
     "compiler",
-    "ejs-cli"
+    "ejs-compiler",
+    "template"
   ],
   "license": "MIT",
   "scripts": {
