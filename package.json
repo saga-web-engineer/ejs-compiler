@@ -29,7 +29,9 @@
     "dev": "unbuild --stub",
     "build": "unbuild",
     "prepublishOnly": "npm run build",
-    "test:cli": "node dist/cli.mjs -b test/templates/pages/ -f \"**/[!_]*.ejs\" -o test/dist/ -O test/data.json -e \"about.ejs\"",
+    "example:cli": "node dist/cli.mjs -b examples/templates/pages/ -f \"**/[!_]*.ejs\" -o examples/dist/ -O examples/data.json -e \"about.ejs\"",
+    "example:file": "node examples/compile-to-file.js",
+    "example:memory": "node examples/compile-to-memory.js",
     "format": "biome check --write .",
     "lint": "biome check ."
   },

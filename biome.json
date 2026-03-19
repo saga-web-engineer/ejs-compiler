@@ -33,5 +33,16 @@
     "includes": ["**"]
   },
   "javascript": { "formatter": { "quoteStyle": "single" } },
-  "overrides": [{ "includes": [] }]
+  "overrides": [
+    {
+      "includes": ["examples/**/*.js"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ]
 }
