@@ -1,7 +1,7 @@
 export const meta = {
   name: 'ejs-compiler',
   version: '0.1.0',
-  description: 'Modern EJS template compiler with TypeScript support',
+  description: 'Simple EJS compiler written in TypeScript, usable as both CLI and library',
 };
 
 export const args = {
