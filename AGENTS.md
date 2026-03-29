@@ -43,10 +43,9 @@ npm run dev
 
 # Code quality
 npm run format        # Apply Biome formatting
-npm run lint          # Run Biome linter
 
 # Testing
-npm run test:cli      # Test CLI functionality (compiles actual templates)
+npm test              # Run unit tests
 ```
 
 ## Coding Standards
@@ -89,7 +88,7 @@ npm run test:cli      # Test CLI functionality (compiles actual templates)
 ### When Changing Code
 1. Implement changes
 2. Run `npm run format`
-3. Run `npm run test:cli`
+3. Run `npm test`
 4. Commit
 
 ### When Committing
@@ -154,10 +153,9 @@ npm run dev
 
 # コード品質
 npm run format        # Biomeフォーマット適用
-npm run lint          # Biomeリント
 
 # テスト
-npm run test:cli      # CLI動作確認（実際のテンプレートをコンパイル）
+npm test              # ユニットテスト実行
 ```
 
 ## コーディング規約
@@ -200,7 +198,7 @@ npm run test:cli      # CLI動作確認（実際のテンプレートをコン�
 ### コード変更時
 1. 変更を実装
 2. `npm run format` でフォーマット
-3. `npm run test:cli` でテスト
+3. `npm test` でテスト
 4. コミット
 
 ### コミット時

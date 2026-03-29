@@ -129,8 +129,8 @@ npm run dev
 # Format code
 npm run format
 
-# Lint
-npm run lint
+# Run tests
+npm test
 ```
 
 ## Requirements
