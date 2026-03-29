@@ -33,7 +33,7 @@
     "example:file": "node examples/compile-to-file.js",
     "example:memory": "node examples/compile-to-memory.js",
     "format": "biome check --write .",
-    "lint": "biome check ."
+    "test": "vitest run src"
   },
   "volta": {
     "node": "24.13.0",
@@ -51,6 +51,7 @@
     "@types/ejs": "^3.1.5",
     "@types/node": "^24.10.13",
     "typescript": "^6.0.2",
-    "unbuild": "^3.6.1"
+    "unbuild": "^3.6.1",
+    "vitest": "^4.1.2"
   }
 }
