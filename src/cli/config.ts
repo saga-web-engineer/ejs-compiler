@@ -4,7 +4,7 @@ export const meta = {
   description: 'Simple EJS compiler written in TypeScript, usable as both CLI and library',
 };
 
-export const args = {
+export const cliOptions = {
   file: {
     type: 'string',
     description: 'Template file path (supports glob patterns)',
