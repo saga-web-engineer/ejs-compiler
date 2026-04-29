@@ -18,7 +18,7 @@ export async function compile(
 
   const files = await fg(filePattern, {
     cwd: baseDir,
-    ignore: exclude,
+    ignore: exclude.map(normalizeExcludePattern),
     absolute: false,
     onlyFiles: true,
   });
@@ -61,6 +61,11 @@ export async function loadOptionsData(input: string): Promise<Record<string, unk
     const fileContent = await readFile(input, 'utf-8');
     return JSON.parse(fileContent);
   }
+}
+
+function normalizeExcludePattern(pattern: string): string {
+  if (!pattern.includes('/')) return `**/${pattern}`;
+  return pattern;
 }
 
 function getOutputFileName(file: string): string {

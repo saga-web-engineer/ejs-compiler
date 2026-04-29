@@ -72,13 +72,25 @@ describe('compile', () => {
     expect(ejs.renderFile).toHaveBeenCalledWith(expect.any(String), { title: 'My Page' });
   });
 
-  it('passes exclude patterns to fast-glob', async () => {
+  it('normalizes plain-name exclude patterns to match at any depth', async () => {
     vi.mocked(fg).mockResolvedValue(['index.ejs']);
     vi.mocked(ejs.renderFile).mockResolvedValue('');
 
-    await compile('**/*.ejs', { baseDir: '/base', exclude: ['_*.ejs'] });
+    await compile('**/*.ejs', { baseDir: '/base', exclude: ['_*'] });
 
-    expect(fg).toHaveBeenCalledWith('**/*.ejs', expect.objectContaining({ ignore: ['_*.ejs'] }));
+    expect(fg).toHaveBeenCalledWith('**/*.ejs', expect.objectContaining({ ignore: ['**/_*'] }));
+  });
+
+  it('does not modify exclude patterns that already contain a path separator', async () => {
+    vi.mocked(fg).mockResolvedValue(['index.ejs']);
+    vi.mocked(ejs.renderFile).mockResolvedValue('');
+
+    await compile('**/*.ejs', { baseDir: '/base', exclude: ['partials/_*'] });
+
+    expect(fg).toHaveBeenCalledWith(
+      '**/*.ejs',
+      expect.objectContaining({ ignore: ['partials/_*'] }),
+    );
   });
 
   it('accepts an array of file patterns', async () => {

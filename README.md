@@ -8,7 +8,7 @@ Simple EJS compiler written in TypeScript, usable as both CLI and library.
 - **Library API**: Programmatic compilation for build scripts and automation
 - **Glob Patterns**: Compile multiple files with powerful pattern matching
 - **TypeScript Support**: Full TypeScript type definitions included
-- **ESM Only**: Modern ES module design for Node.js 18+
+- **ESM Only**: Modern ES module design for Node.js 24+
 
 ## Installation
 
@@ -49,7 +49,7 @@ ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist
 # Compile with data from JSON file
 ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -O ./data.json
 
-# Exclude files starting with underscore (partials)
+# Exclude files starting with underscore (partials) at any depth
 ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -e "_*"
 
 # Compile specific files only
@@ -141,7 +141,7 @@ npm test
 
 ## Requirements
 
-- Node.js 18 or higher
+- Node.js 24 or higher
 - ESM-compatible environment
 
 ## License
