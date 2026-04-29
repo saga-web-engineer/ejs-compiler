@@ -27,6 +27,9 @@
     "template"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "saga-web-engineer",
   "repository": {
     "type": "git",
