@@ -1,6 +1,6 @@
 {
   "name": "@s.a.g.a/ejs-compiler",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple EJS compiler written in TypeScript, usable as both CLI and library",
   "type": "module",
   "bin": {
