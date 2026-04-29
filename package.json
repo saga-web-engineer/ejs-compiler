@@ -35,7 +35,7 @@
     "url": "https://github.com/saga-web-engineer/ejs-cli/issues"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "scripts": {
     "dev": "unbuild --stub",
