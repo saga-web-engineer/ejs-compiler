@@ -49,10 +49,6 @@
     "format": "biome check --write .",
     "test": "vitest run src"
   },
-  "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
-  },
   "dependencies": {
     "citty": "^0.2.2",
     "consola": "^3.4.2",
