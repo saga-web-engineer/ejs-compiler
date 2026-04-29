@@ -32,4 +32,10 @@ export const cliOptions = {
     description: 'File patterns to exclude (comma-separated)',
     alias: 'e',
   },
+  watch: {
+    type: 'boolean',
+    description: 'Watch for file changes and recompile',
+    alias: 'w',
+    default: false,
+  },
 } as const;

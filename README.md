@@ -39,6 +39,7 @@ ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -O data.json
 - `-o, --out` : Output directory (if omitted, outputs to stdout)
 - `-O, --options` : Options data (JSON file path or JSON string)
 - `-e, --exclude` : File patterns to exclude (comma-separated)
+- `-w, --watch` : Watch for file changes and recompile
 
 #### Examples
 
@@ -54,6 +55,9 @@ ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -e "_*"
 
 # Compile specific files only
 ejs-compiler -f "pages/**/*.ejs" -b ./templates -o ./dist
+
+# Watch for changes and recompile automatically
+ejs-compiler -f "**/[!_]*.ejs" -b ./templates -o ./dist -w
 ```
 
 ### As a Library

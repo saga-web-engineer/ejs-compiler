@@ -47,12 +47,14 @@
     "build": "unbuild",
     "prepublishOnly": "npm run build",
     "example:cli": "node dist/cli.mjs -b examples/templates/pages/ -f \"**/[!_]*.ejs\" -o examples/dist/ -O examples/data.json -e \"about.ejs\"",
+    "example:watch": "node dist/cli.mjs -b examples/templates/pages/ -f \"**/[!_]*.ejs\" -o examples/dist/ -O examples/data.json -e \"about.ejs\" -w",
     "example:file": "node examples/compile-to-file.js",
     "example:memory": "node examples/compile-to-memory.js",
     "format": "biome check --write .",
     "test": "vitest run src"
   },
   "dependencies": {
+    "chokidar": "^5.0.0",
     "citty": "^0.2.2",
     "consola": "^3.4.2",
     "ejs": "^5.0.2",

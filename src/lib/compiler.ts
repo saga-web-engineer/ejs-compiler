@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import ejs from 'ejs';
 import fg from 'fast-glob';
 import { dirname, join } from 'pathe';
+
 import type { CompileResult, CompilerOptions } from './types';
 
 /**
@@ -63,7 +64,7 @@ export async function loadOptionsData(input: string): Promise<Record<string, unk
   }
 }
 
-function normalizeExcludePattern(pattern: string): string {
+export function normalizeExcludePattern(pattern: string): string {
   if (!pattern.includes('/')) return `**/${pattern}`;
   return pattern;
 }

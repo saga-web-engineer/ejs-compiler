@@ -1,6 +1,7 @@
 import type { CommandContext } from 'citty';
 import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { compile, loadOptionsData } from '../lib/index';
 import type { cliOptions } from './config';
 import { compileHandler } from './handler';
@@ -38,11 +39,13 @@ function makeContext(params: {
       out,
       options,
       exclude,
+      watch: false,
       f: file,
       b: baseDir,
       o: out,
       O: options,
       e: exclude,
+      w: false,
     } as HandlerContext['args'],
   };
 }

@@ -29,6 +29,7 @@ src/
 - `-o, --out` : Output directory (if omitted, outputs to stdout)
 - `-O, --options` : Options data (JSON file path or JSON string)
 - `-e, --exclude` : File patterns to exclude (comma-separated)
+- `-w, --watch` : Watch for file changes and recompile
 
 ## Development Commands
 
@@ -137,6 +138,7 @@ src/
 - `-o, --out` : 出力先ディレクトリ指定（省略時は標準出力）
 - `-O, --options` : オプション変数（JSONファイルまたはJSON文字列）
 - `-e, --exclude` : 除外対象ファイル/ディレクトリ（カンマ区切り）
+- `-w, --watch` : ファイル変更を監視して自動再コンパイル
 
 ## 開発コマンド
 
