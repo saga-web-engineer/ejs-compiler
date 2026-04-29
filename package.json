@@ -1,5 +1,5 @@
 {
-  "name": "ejs-compiler",
+  "name": "@s.a.g.a/ejs-compiler",
   "version": "0.1.0",
   "description": "Simple EJS compiler written in TypeScript, usable as both CLI and library",
   "type": "module",
@@ -22,17 +22,19 @@
     "cli",
     "compiler",
     "ejs-compiler",
+    "ejs-cli",
+    "saga",
     "template"
   ],
   "license": "MIT",
-  "author": "kumeyuta <ku8.m.1.e2@gmail.com>",
+  "author": "saga-web-engineer",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saga-web-engineer/ejs-cli.git"
+    "url": "git+https://github.com/saga-web-engineer/ejs-compiler.git"
   },
-  "homepage": "https://github.com/saga-web-engineer/ejs-cli#readme",
+  "homepage": "https://github.com/saga-web-engineer/ejs-compiler#readme",
   "bugs": {
-    "url": "https://github.com/saga-web-engineer/ejs-cli/issues"
+    "url": "https://github.com/saga-web-engineer/ejs-compiler/issues"
   },
   "engines": {
     "node": ">=24"
