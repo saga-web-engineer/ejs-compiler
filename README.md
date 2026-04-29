@@ -13,7 +13,13 @@ Simple EJS compiler written in TypeScript, usable as both CLI and library.
 ## Installation
 
 ```bash
-npm install ejs-compiler
+npm install @s.a.g.a/ejs-compiler
+```
+
+### Windows PowerShell:
+
+```bash
+npm install "@s.a.g.a/ejs-compiler"
 ```
 
 ## Usage
