@@ -144,5 +144,4 @@ MIT
 
 ## Related
 
-- [ROADMAP.md](./ROADMAP.md) - Planned features and future development
 - [AGENTS.md](./AGENTS.md) - Guidelines for AI agents working on this project

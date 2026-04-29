@@ -12,8 +12,6 @@ This file provides guidelines for AI agents like Claude Code when working on thi
 - **Library**: Programmatic usage via `import { compile } from 'ejs-compiler'`
 - **Tech Stack**: TypeScript, unbuild, ESM only (Node.js 18+)
 
-**📍 For planned features and future development, see [ROADMAP.md](./ROADMAP.md)**
-
 ## Directory Structure
 
 ```
@@ -121,8 +119,6 @@ npm test              # Run unit tests
 - **CLI**: `ejs-compiler` コマンドでテンプレートファイルを一括コンパイル
 - **ライブラリ**: `import { compile } from 'ejs-compiler'` でプログラムから利用可能
 - **技術スタック**: TypeScript, unbuild, ESM only (Node.js 18+)
-
-**📍 実装予定の機能や今後の開発については [ROADMAP.md](./ROADMAP.md) を参照してください**
 
 ## ディレクトリ構造
 
