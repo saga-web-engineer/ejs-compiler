@@ -45,7 +45,10 @@ npm run dev
 npm run format        # Apply Biome formatting
 
 # Testing
-npm test              # Run unit tests
+npm test             # Run all unit tests alongside src files (no build required)
+npm run test:unit    # Alias for all unit tests with mocked dependencies
+npm run test:cli     # CLI handler and watcher unit tests
+npm run test:watch   # Watch all unit tests
 ```
 
 ## Coding Standards
@@ -155,7 +158,10 @@ npm run dev
 npm run format        # Biomeフォーマット適用
 
 # テスト
-npm test              # ユニットテスト実行
+npm test             # src内の全ユニットテストを実行（ビルド不要）
+npm run test:unit    # 全ユニットテストを実行
+npm run test:cli     # CLIハンドラー・watcherのユニットテスト
+npm run test:watch   # 全ユニットテストを監視実行
 ```
 
 ## コーディング規約

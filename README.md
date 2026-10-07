@@ -138,14 +138,6 @@ Loads data from JSON file or JSON string.
 
 **Returns:** `Promise<Record<string, unknown>>`
 
-## Examples
-
-See the [examples/](./examples) directory for complete working examples:
-
-- `npm run example:cli` - CLI usage example
-- `npm run example:file` - Compile to file (static site generation)
-- `npm run example:memory` - Compile to memory (server-side rendering)
-
 ## Development
 
 Building from source requires Node.js 24.11+ (24.x) or 26+ for tsdown.
@@ -158,8 +150,17 @@ npm run build
 # Development mode (watch and rebuild; keep running while editing)
 npm run dev
 
-# Build and run the CLI example
+# Run all unit tests (no build required)
+npm test
+
+# Alias for running all unit tests
+npm run test:unit
+
+# Run CLI unit tests
 npm run test:cli
+
+# Watch all unit tests
+npm run test:watch
 
 # Type-check with TypeScript
 npm run typecheck
@@ -167,9 +168,18 @@ npm run typecheck
 # Format code
 npm run format
 
-# Run tests
-npm test
+# Lint
+npm run lint
 ```
+
+Tests use Vitest in the Node.js environment and live alongside the source files as
+`src/**/*.test.ts`. Library unit tests mock file access, file discovery, and EJS
+rendering to check compiler behavior and error handling. CLI unit tests mock the
+library, logging, and process exit to check argument forwarding, output, and errors.
+Tests do not spawn processes or create template files.
+
+`npm run typecheck` checks both source code and test/configuration files. All test
+commands run directly against the TypeScript source without a build step.
 
 ## Requirements
 

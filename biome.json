@@ -35,14 +35,8 @@
   "javascript": { "formatter": { "quoteStyle": "single" } },
   "overrides": [
     {
-      "includes": ["examples/**/*.js"],
-      "linter": {
-        "rules": {
-          "suspicious": {
-            "noConsole": "off"
-          }
-        }
-      }
+      "includes": ["src/**/*.test.ts"],
+      "linter": { "rules": { "complexity": { "useArrowFunction": "off" } } }
     }
   ]
 }
