@@ -16,6 +16,7 @@ export async function compileHandler(context: CommandContext<typeof cliOptions>)
       outDir: args.out,
       data,
       exclude,
+      minify: args.minify,
     });
 
     if (!args.out) {
@@ -33,6 +34,7 @@ export async function compileHandler(context: CommandContext<typeof cliOptions>)
         outDir: args.out,
         data,
         exclude,
+        minify: args.minify,
       });
     }
   } catch (error) {

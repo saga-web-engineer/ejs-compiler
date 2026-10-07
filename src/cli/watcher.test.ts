@@ -106,3 +106,16 @@ describe('startWatcher', () => {
     expect(consola.info).toHaveBeenCalledWith(expect.stringContaining('Watching'));
   });
 });
+
+it('preserves minify when a watched file changes', async function checkMinify() {
+  const emitter = makeWatcher();
+  vi.mocked(compile).mockResolvedValue([]);
+  startWatcher({ filePattern: '*.ejs', baseDir: '/base', minify: true });
+  emitter.emit('change', '/base/index.ejs');
+  await vi.waitFor(function checkCompile() {
+    expect(compile).toHaveBeenLastCalledWith(
+      'index.ejs',
+      expect.objectContaining({ minify: true }),
+    );
+  });
+});

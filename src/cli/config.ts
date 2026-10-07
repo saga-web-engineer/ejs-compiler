@@ -38,4 +38,10 @@ export const cliOptions = {
     alias: 'w',
     default: false,
   },
+  minify: {
+    type: 'boolean',
+    description: 'Reduce template whitespace using EJS rmWhitespace',
+    alias: 'm',
+    default: false,
+  },
 } as const;
