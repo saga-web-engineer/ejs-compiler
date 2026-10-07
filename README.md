@@ -129,12 +129,21 @@ See the [examples/](./examples) directory for complete working examples:
 
 ## Development
 
+Building from source requires Node.js 24.11+ (24.x) or 26+ for tsdown.
+The bundled output targets Node.js 24.
+
 ```bash
 # Build
 npm run build
 
-# Development mode (stub mode)
+# Development mode (watch and rebuild; keep running while editing)
 npm run dev
+
+# Build and run the CLI example
+npm run test:cli
+
+# Type-check with TypeScript
+npm run typecheck
 
 # Format code
 npm run format
