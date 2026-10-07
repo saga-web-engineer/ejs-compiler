@@ -33,9 +33,9 @@ export function startWatcher(options: WatcherOptions): void {
 }
 
 async function handleFile(file: string, options: WatcherOptions): Promise<void> {
-  const { baseDir, outDir, data, exclude } = options;
+  const { baseDir, outDir, data, exclude, minify } = options;
   try {
-    const results = await compile(file, { baseDir, outDir, data, exclude });
+    const results = await compile(file, { baseDir, outDir, data, exclude, minify });
     for (const result of results)
       result.output
         ? consola.success(`${result.source} → ${result.output}`)

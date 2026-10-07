@@ -15,7 +15,7 @@ export async function compile(
   filePattern: string | string[],
   options: CompilerOptions = {},
 ): Promise<CompileResult[]> {
-  const { baseDir = process.cwd(), outDir, data = {}, exclude = [] } = options;
+  const { baseDir = process.cwd(), outDir, data = {}, exclude = [], minify = false } = options;
 
   const files = await fg(filePattern, {
     cwd: baseDir,
@@ -29,7 +29,9 @@ export async function compile(
   return Promise.all(
     files.map(async (file) => {
       const sourcePath = join(baseDir, file);
-      const content = await ejs.renderFile(sourcePath, data);
+      const content = minify
+        ? await ejs.renderFile(sourcePath, data, { rmWhitespace: true })
+        : await ejs.renderFile(sourcePath, data);
 
       if (!outDir) {
         return {

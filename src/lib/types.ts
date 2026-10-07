@@ -7,6 +7,8 @@ export interface CompilerOptions {
   data?: Record<string, unknown>;
   /** File patterns to exclude */
   exclude?: string[];
+  /** Reduce template whitespace using EJS rmWhitespace (default: false) */
+  minify?: boolean;
 }
 
 export interface CompileResult {

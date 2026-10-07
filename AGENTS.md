@@ -10,7 +10,7 @@ This file provides guidelines for AI agents like Claude Code when working on thi
 
 - **CLI**: Batch compile template files with the `ejs-compiler` command
 - **Library**: Programmatic usage via `import { compile } from 'ejs-compiler'`
-- **Tech Stack**: TypeScript, unbuild, ESM only (Node.js 24+)
+- **Tech Stack**: TypeScript, tsdown, ESM only (Node.js 24+)
 
 ## Directory Structure
 
@@ -30,6 +30,7 @@ src/
 - `-O, --options` : Options data (JSON file path or JSON string)
 - `-e, --exclude` : File patterns to exclude (comma-separated)
 - `-w, --watch` : Watch for file changes and recompile
+- `-m, --minify` : Reduce template whitespace using EJS `rmWhitespace` (default: false)
 
 ## Development Commands
 
@@ -37,7 +38,7 @@ src/
 # Build
 npm run build
 
-# Development mode (stub mode)
+# Development mode (watch and rebuild)
 npm run dev
 
 # Code quality
@@ -119,7 +120,7 @@ npm test              # Run unit tests
 
 - **CLI**: `ejs-compiler` コマンドでテンプレートファイルを一括コンパイル
 - **ライブラリ**: `import { compile } from 'ejs-compiler'` でプログラムから利用可能
-- **技術スタック**: TypeScript, unbuild, ESM only (Node.js 24+)
+- **技術スタック**: TypeScript, tsdown, ESM only (Node.js 24+)
 
 ## ディレクトリ構造
 
@@ -139,6 +140,7 @@ src/
 - `-O, --options` : オプション変数（JSONファイルまたはJSON文字列）
 - `-e, --exclude` : 除外対象ファイル/ディレクトリ（カンマ区切り）
 - `-w, --watch` : ファイル変更を監視して自動再コンパイル
+- `-m, --minify` : EJS `rmWhitespace` によるテンプレートの空白削減（デフォルト: false）
 
 ## 開発コマンド
 
@@ -146,7 +148,7 @@ src/
 # ビルド
 npm run build
 
-# 開発モード（stub mode）
+# 開発モード（変更監視・再ビルド）
 npm run dev
 
 # コード品質

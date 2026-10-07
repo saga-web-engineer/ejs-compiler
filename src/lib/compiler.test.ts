@@ -175,3 +175,12 @@ describe('loadOptionsData', () => {
     await expect(loadOptionsData('/nonexistent.json')).rejects.toThrow('ENOENT');
   });
 });
+
+it('enables EJS whitespace removal only when minify is true', async function checkMinify() {
+  vi.mocked(fg).mockResolvedValue(['index.ejs']);
+  vi.mocked(ejs.renderFile).mockResolvedValue('<h1>Hello</h1>');
+  await compile('*.ejs', { baseDir: '/base', minify: true });
+  expect(ejs.renderFile).toHaveBeenLastCalledWith('/base/index.ejs', {}, { rmWhitespace: true });
+  await compile('*.ejs', { baseDir: '/base', minify: false });
+  expect(ejs.renderFile).toHaveBeenLastCalledWith('/base/index.ejs', {});
+});

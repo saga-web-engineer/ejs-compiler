@@ -5,6 +5,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { compile, loadOptionsData } from '../lib/index';
 import type { cliOptions } from './config';
 import { compileHandler } from './handler';
+import { startWatcher } from './watcher';
+
+vi.mock('./watcher', function mockWatcher() {
+  return { startWatcher: vi.fn() };
+});
 
 vi.mock('consola', () => ({
   consola: {
@@ -27,8 +32,10 @@ function makeContext(params: {
   out?: string;
   options?: string;
   exclude?: string;
+  minify?: boolean;
+  watch?: boolean;
 }): HandlerContext {
-  const { file, baseDir = '/base', out, options, exclude } = params;
+  const { file, baseDir = '/base', out, options, exclude, minify = false, watch = false } = params;
   return {
     rawArgs: [],
     cmd: {},
@@ -39,13 +46,15 @@ function makeContext(params: {
       out,
       options,
       exclude,
-      watch: false,
+      watch,
+      minify,
       f: file,
       b: baseDir,
       o: out,
       O: options,
       e: exclude,
-      w: false,
+      w: watch,
+      m: minify,
     } as HandlerContext['args'],
   };
 }
@@ -130,4 +139,11 @@ describe('compileHandler', () => {
     expect(consola.error).toHaveBeenCalledWith(error);
     expect(process.exit).toHaveBeenCalledWith(1);
   });
+});
+
+it('forwards minify to both initial compilation and watch mode', async function checkMinify() {
+  vi.mocked(compile).mockResolvedValue([]);
+  await compileHandler(makeContext({ file: '*.ejs', out: '/out', minify: true, watch: true }));
+  expect(compile).toHaveBeenCalledWith('*.ejs', expect.objectContaining({ minify: true }));
+  expect(startWatcher).toHaveBeenCalledWith(expect.objectContaining({ minify: true }));
 });
