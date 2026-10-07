@@ -1,133 +1,177 @@
-import type { CommandContext } from 'citty';
+import { type CommandContext, parseArgs } from 'citty';
 import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { compile, loadOptionsData } from '../lib/index';
-import type { cliOptions } from './config';
+import { cliOptions as args } from './config';
 import { compileHandler } from './handler';
+import { startWatcher } from './watcher';
 
-vi.mock('consola', () => ({
-  consola: {
-    log: vi.fn(),
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('./watcher', function () {
+  return { startWatcher: vi.fn() };
+});
 
-vi.mock('../lib/index', () => ({
-  compile: vi.fn(),
-  loadOptionsData: vi.fn(),
-}));
+vi.mock('../lib/index', function () {
+  return { compile: vi.fn(), loadOptionsData: vi.fn() };
+});
+vi.mock('consola', function () {
+  return { consola: { log: vi.fn(), success: vi.fn(), error: vi.fn() } };
+});
 
-type HandlerContext = CommandContext<typeof cliOptions>;
+const exitError = new Error('Process exited');
 
-function makeContext(params: {
-  file: string;
-  baseDir?: string;
-  out?: string;
-  options?: string;
-  exclude?: string;
-}): HandlerContext {
-  const { file, baseDir = '/base', out, options, exclude } = params;
-  return {
-    rawArgs: [],
-    cmd: {},
-    args: {
-      _: [],
-      file,
-      'base-dir': baseDir,
-      out,
-      options,
-      exclude,
-      watch: false,
-      f: file,
-      b: baseDir,
-      o: out,
-      O: options,
-      e: exclude,
-      w: false,
-    } as HandlerContext['args'],
-  };
-}
+beforeEach(function () {
+  vi.mocked(compile).mockResolvedValue([{ source: 'index.ejs', content: '<h1>Hello</h1>' }]);
+  vi.spyOn(process, 'exit').mockImplementation(function (): never {
+    throw exitError;
+  });
+});
 
-describe('compileHandler', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+describe('compileHandler', function () {
+  it('passes defaults to the compiler and prints HTML to stdout', async function () {
+    await compileHandler(createContext());
+
+    expect(compile).toHaveBeenCalledExactlyOnceWith('*.ejs', {
+      baseDir: './',
+      outDir: undefined,
+      data: {},
+      exclude: [],
+      minify: false,
+    });
+    expect(startWatcher).not.toHaveBeenCalled();
+    expect(loadOptionsData).not.toHaveBeenCalled();
+    expect(consola.log).toHaveBeenCalledExactlyOnceWith('<h1>Hello</h1>');
+    expect(consola.success).not.toHaveBeenCalled();
+    expect(consola.error).not.toHaveBeenCalled();
+    expect(process.exit).not.toHaveBeenCalled();
   });
 
-  it('logs each result content when outDir is not specified', async () => {
+  it.each([
+    'data.json',
+    '{"title":"Hello"}',
+  ])('loads options from %s and forwards the data', async function (input) {
+    const data = { title: 'Hello' };
+    vi.mocked(loadOptionsData).mockResolvedValue(data);
+
+    await compileHandler(createContext(['-O', input]));
+
+    expect(loadOptionsData).toHaveBeenCalledExactlyOnceWith(input);
+    expect(compile).toHaveBeenCalledWith('*.ejs', expect.objectContaining({ data }));
+  });
+
+  it('forwards paths and trims comma-separated exclusions', async function () {
+    await compileHandler(
+      createContext([
+        '-f',
+        '**/*.ejs',
+        '-b',
+        'templates',
+        '-o',
+        'output',
+        '-e',
+        '**/_*.ejs, skip.ejs ',
+      ]),
+    );
+
+    expect(compile).toHaveBeenCalledExactlyOnceWith('**/*.ejs', {
+      baseDir: 'templates',
+      outDir: 'output',
+      data: {},
+      exclude: ['**/_*.ejs', 'skip.ejs'],
+      minify: false,
+    });
+  });
+
+  it.each(['-m', '--minify'])('forwards %s to the compiler', async function (flag) {
+    await compileHandler(createContext([flag]));
+
+    expect(compile).toHaveBeenCalledWith('*.ejs', expect.objectContaining({ minify: true }));
+  });
+
+  it.each([
+    '-w',
+    '--watch',
+  ])('forwards compilation options to watch mode with %s', async function (flag) {
+    const data = { title: 'Hello' };
+    vi.mocked(loadOptionsData).mockResolvedValue(data);
+    await compileHandler(
+      createContext([
+        flag,
+        '-o',
+        'output',
+        '-b',
+        'templates',
+        '-O',
+        'data.json',
+        '-e',
+        '_*.ejs',
+        '-m',
+      ]),
+    );
+    expect(startWatcher).toHaveBeenCalledExactlyOnceWith({
+      filePattern: '*.ejs',
+      baseDir: 'templates',
+      outDir: 'output',
+      data,
+      exclude: ['_*.ejs'],
+      minify: true,
+    });
+  });
+
+  it('prints each result in order when writing to stdout', async function () {
     vi.mocked(compile).mockResolvedValue([
-      { source: '/base/index.ejs', content: '<h1>Hello</h1>' },
-      { source: '/base/about.ejs', content: '<h1>About</h1>' },
+      { source: 'index.ejs', content: '<h1>Home</h1>' },
+      { source: 'about.ejs', content: '<h1>About</h1>' },
     ]);
 
-    await compileHandler(makeContext({ file: '**/*.ejs' }));
+    await compileHandler(createContext());
 
-    expect(consola.log).toHaveBeenCalledWith('<h1>Hello</h1>');
-    expect(consola.log).toHaveBeenCalledWith('<h1>About</h1>');
+    expect(consola.log).toHaveBeenCalledTimes(2);
+    expect(consola.log).toHaveBeenNthCalledWith(1, '<h1>Home</h1>');
+    expect(consola.log).toHaveBeenNthCalledWith(2, '<h1>About</h1>');
     expect(consola.success).not.toHaveBeenCalled();
   });
 
-  it('logs a success message and file paths when outDir is specified', async () => {
+  it('reports the count and output paths when writing to a directory', async function () {
     vi.mocked(compile).mockResolvedValue([
-      { source: '/base/index.ejs', output: '/out/index.html', content: '<h1>Hello</h1>' },
+      { source: 'index.ejs', output: 'output/index.html', content: '<h1>Home</h1>' },
+      { source: 'about.ejs', output: 'output/about.html', content: '<h1>About</h1>' },
     ]);
 
-    await compileHandler(makeContext({ file: '**/*.ejs', out: '/out' }));
+    await compileHandler(createContext(['-o', 'output']));
 
-    expect(consola.success).toHaveBeenCalledWith('Compiled 1 file(s)');
-    expect(consola.log).toHaveBeenCalledWith('/base/index.ejs → /out/index.html');
+    expect(consola.success).toHaveBeenCalledExactlyOnceWith('Compiled 2 file(s)');
+    expect(consola.log).toHaveBeenCalledTimes(2);
+    expect(consola.log).toHaveBeenNthCalledWith(1, 'index.ejs → output/index.html');
+    expect(consola.log).toHaveBeenNthCalledWith(2, 'about.ejs → output/about.html');
   });
 
-  it('calls loadOptionsData and passes the result as data when options is provided', async () => {
-    vi.mocked(loadOptionsData).mockResolvedValue({ title: 'My Site' });
-    vi.mocked(compile).mockResolvedValue([{ source: '/base/index.ejs', content: '' }]);
+  it('reports options errors and exits without compiling', async function () {
+    const error = new Error('Invalid options');
+    vi.mocked(loadOptionsData).mockRejectedValue(error);
 
-    await compileHandler(makeContext({ file: '**/*.ejs', options: '{"title":"My Site"}' }));
+    await expect(compileHandler(createContext(['-O', 'data.json']))).rejects.toBe(exitError);
 
-    expect(loadOptionsData).toHaveBeenCalledWith('{"title":"My Site"}');
-    expect(compile).toHaveBeenCalledWith(
-      '**/*.ejs',
-      expect.objectContaining({ data: { title: 'My Site' } }),
-    );
+    expect(consola.error).toHaveBeenCalledExactlyOnceWith(error);
+    expect(process.exit).toHaveBeenCalledExactlyOnceWith(1);
+    expect(compile).not.toHaveBeenCalled();
+    expect(consola.log).not.toHaveBeenCalled();
+    expect(consola.success).not.toHaveBeenCalled();
   });
 
-  it('uses an empty object for data when options is not provided', async () => {
-    vi.mocked(compile).mockResolvedValue([{ source: '/base/index.ejs', content: '' }]);
-
-    await compileHandler(makeContext({ file: '**/*.ejs' }));
-
-    expect(loadOptionsData).not.toHaveBeenCalled();
-    expect(compile).toHaveBeenCalledWith('**/*.ejs', expect.objectContaining({ data: {} }));
-  });
-
-  it('splits and trims comma-separated exclude patterns', async () => {
-    vi.mocked(compile).mockResolvedValue([{ source: '/base/index.ejs', content: '' }]);
-
-    await compileHandler(makeContext({ file: '**/*.ejs', exclude: '_*.ejs , about.ejs' }));
-
-    expect(compile).toHaveBeenCalledWith(
-      '**/*.ejs',
-      expect.objectContaining({ exclude: ['_*.ejs', 'about.ejs'] }),
-    );
-  });
-
-  it('uses an empty array for exclude when exclude is not provided', async () => {
-    vi.mocked(compile).mockResolvedValue([{ source: '/base/index.ejs', content: '' }]);
-
-    await compileHandler(makeContext({ file: '**/*.ejs' }));
-
-    expect(compile).toHaveBeenCalledWith('**/*.ejs', expect.objectContaining({ exclude: [] }));
-  });
-
-  it('calls consola.error and exits with code 1 on error', async () => {
-    const error = new Error('Template not found');
+  it('reports compiler errors and exits without printing results', async function () {
+    const error = new Error('Compilation failed');
     vi.mocked(compile).mockRejectedValue(error);
 
-    await compileHandler(makeContext({ file: '**/*.ejs' }));
+    await expect(compileHandler(createContext())).rejects.toBe(exitError);
 
-    expect(consola.error).toHaveBeenCalledWith(error);
-    expect(process.exit).toHaveBeenCalledWith(1);
+    expect(consola.error).toHaveBeenCalledExactlyOnceWith(error);
+    expect(process.exit).toHaveBeenCalledExactlyOnceWith(1);
+    expect(consola.log).not.toHaveBeenCalled();
+    expect(consola.success).not.toHaveBeenCalled();
   });
 });
+
+function createContext(rawArgs: string[] = []): CommandContext<typeof args> {
+  const input = ['-f', '*.ejs', ...rawArgs];
+  return { rawArgs: input, args: parseArgs<typeof args>(input, args), cmd: { args } };
+}

@@ -10,8 +10,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
     }
   },
   "files": [
@@ -43,15 +43,16 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "unbuild --stub",
-    "build": "unbuild",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test:cli": "vitest run src/cli",
     "prepublishOnly": "npm run build",
-    "example:cli": "node dist/cli.mjs -b examples/templates/pages/ -f \"**/[!_]*.ejs\" -o examples/dist/ -O examples/data.json -e \"about.ejs\"",
-    "example:watch": "node dist/cli.mjs -b examples/templates/pages/ -f \"**/[!_]*.ejs\" -o examples/dist/ -O examples/data.json -e \"about.ejs\" -w",
-    "example:file": "node examples/compile-to-file.js",
-    "example:memory": "node examples/compile-to-memory.js",
     "format": "biome check --write .",
-    "test": "vitest run src"
+    "test": "vitest run",
+    "lint": "biome check .",
+    "test:unit": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "chokidar": "^5.0.0",
@@ -65,8 +66,8 @@
     "@biomejs/biome": "2.4.13",
     "@types/ejs": "^3.1.5",
     "@types/node": "^24.12.2",
-    "typescript": "^6.0.3",
-    "unbuild": "^3.6.1",
-    "vitest": "^4.1.5"
+    "tsdown": "^0.23.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
   }
 }

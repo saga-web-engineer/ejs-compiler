@@ -40,6 +40,7 @@ ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -O data.json
 - `-O, --options` : Options data (JSON file path or JSON string)
 - `-e, --exclude` : File patterns to exclude (comma-separated)
 - `-w, --watch` : Watch for file changes and recompile
+- `-m, --minify` : Reduce template whitespace using EJS `rmWhitespace` (default: false)
 
 #### Examples
 
@@ -58,7 +59,16 @@ ejs-compiler -f "pages/**/*.ejs" -b ./templates -o ./dist
 
 # Watch for changes and recompile automatically
 ejs-compiler -f "**/[!_]*.ejs" -b ./templates -o ./dist -w
+# Reduce whitespace in the generated HTML
+ejs-compiler -f "**/*.ejs" -b ./templates -o ./dist -m
 ```
+
+`--minify` removes leading/trailing whitespace on template lines and collapses blank
+lines, including in partials. It does not minify inline JavaScript or CSS, remove
+HTML comments, or guarantee single-line output. EJS does not parse HTML, so use this
+option only when template indentation and blank lines are not significant (for
+example, whitespace inside `<pre>` or `<textarea>` can change). Whitespace in data
+inserted at render time is not compressed.
 
 ### As a Library
 
@@ -104,6 +114,15 @@ Compiles EJS template files.
   - `outDir` (string): Output directory (optional - omit for memory-only compilation)
   - `data` (Record<string, unknown>): Data to pass to templates
   - `exclude` (string[]): File patterns to exclude
+  - `minify` (boolean): Enable EJS `rmWhitespace` (default: false)
+
+```javascript
+const results = await compile('index.ejs', {
+  baseDir: './templates',
+  data: { title: 'Hello' },
+  minify: true,
+});
+```
 
 **Returns:** `Promise<CompileResult[]>`
 - `source` (string): Source file path
@@ -119,29 +138,48 @@ Loads data from JSON file or JSON string.
 
 **Returns:** `Promise<Record<string, unknown>>`
 
-## Examples
-
-See the [examples/](./examples) directory for complete working examples:
-
-- `npm run example:cli` - CLI usage example
-- `npm run example:file` - Compile to file (static site generation)
-- `npm run example:memory` - Compile to memory (server-side rendering)
-
 ## Development
+
+Building from source requires Node.js 24.11+ (24.x) or 26+ for tsdown.
+The bundled output targets Node.js 24.
 
 ```bash
 # Build
 npm run build
 
-# Development mode (stub mode)
+# Development mode (watch and rebuild; keep running while editing)
 npm run dev
+
+# Run all unit tests (no build required)
+npm test
+
+# Alias for running all unit tests
+npm run test:unit
+
+# Run CLI unit tests
+npm run test:cli
+
+# Watch all unit tests
+npm run test:watch
+
+# Type-check with TypeScript
+npm run typecheck
 
 # Format code
 npm run format
 
-# Run tests
-npm test
+# Lint
+npm run lint
 ```
+
+Tests use Vitest in the Node.js environment and live alongside the source files as
+`src/**/*.test.ts`. Library unit tests mock file access, file discovery, and EJS
+rendering to check compiler behavior and error handling. CLI unit tests mock the
+library, logging, and process exit to check argument forwarding, output, and errors.
+Tests do not spawn processes or create template files.
+
+`npm run typecheck` checks both source code and test/configuration files. All test
+commands run directly against the TypeScript source without a build step.
 
 ## Requirements
 
