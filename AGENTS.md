@@ -10,7 +10,7 @@ This file provides guidelines for AI agents like Claude Code when working on thi
 
 - **CLI**: Batch compile template files with the `ejs-compiler` command
 - **Library**: Programmatic usage via `import { compile } from 'ejs-compiler'`
-- **Tech Stack**: TypeScript, unbuild, ESM only (Node.js 24+)
+- **Tech Stack**: TypeScript, tsdown, ESM only (Node.js 24+)
 
 ## Directory Structure
 
@@ -37,7 +37,7 @@ src/
 # Build
 npm run build
 
-# Development mode (stub mode)
+# Development mode (watch and rebuild)
 npm run dev
 
 # Code quality
@@ -119,7 +119,7 @@ npm test              # Run unit tests
 
 - **CLI**: `ejs-compiler` コマンドでテンプレートファイルを一括コンパイル
 - **ライブラリ**: `import { compile } from 'ejs-compiler'` でプログラムから利用可能
-- **技術スタック**: TypeScript, unbuild, ESM only (Node.js 24+)
+- **技術スタック**: TypeScript, tsdown, ESM only (Node.js 24+)
 
 ## ディレクトリ構造
 
@@ -146,7 +146,7 @@ src/
 # ビルド
 npm run build
 
-# 開発モード（stub mode）
+# 開発モード（変更監視・再ビルド）
 npm run dev
 
 # コード品質
